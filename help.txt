@@ -1,0 +1,15 @@
+#django-admin createapp <name>
+
+
+# run server
+python manage.py runserver
+
+# make migrations to database
+python manage.py makemigrations
+python manage.py migrate
+
+# django api shell
+python manage.py shell
+
+# create superuser
+python manage.py createsuperuser
