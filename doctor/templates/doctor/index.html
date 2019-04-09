@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DoctorPage</title>
+</head>
+<body>
+
+{% if all_patients %}
+    <ul>
+        {% for p in all_patients %}
+            <li><a href="{{ p.id }}">{{ p.first_name }} {{ p.last_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>No Patients in DB!</h3>
+{% endif %}
+
+
+</body>
+</html>
