@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>medtest_details</title>
+</head>
+<body>
+
+<a href="{% url 'doctor:patient_details' patients.id %}" >back to patient details</a>
+
+<form action="{% url 'doctor:patient_details' patients.id %}" method="post">
+    {% csrf_token %}
+    {% for medtest in patients%}
+
+    {% endfor %}
+</form>
+
+</body>
+</html>
