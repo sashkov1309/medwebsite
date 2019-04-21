@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Main Index</title>
-</head>
-<body>
+{% extends 'extends/base.html' %}
 
-<ul>
-    <li><a href="{% url 'main:login' %}">Login</a></li>
-    <li><a href="{% url 'doctor:index' %}">Doctor</a></li>
-    <li><a href="{% url 'patient:index' %}">Patient</a></li>
-    <li><a href="{% url 'lab:index' %}">Lab</a></li>
-</ul>
+{% block title %}
+   Main Index
+{% endblock %}
 
+{% block content %}
 
-
-
-
-</body>
-</html>
+{% endblock %}
