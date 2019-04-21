@@ -6,6 +6,13 @@
 </head>
 <body>
 
+<ul>
+    <li><a href="{% url 'main:login' %}">Login</a></li>
+    <li><a href="{% url 'doctor:index' %}">Doctor</a></li>
+    <li><a href="{% url 'patient:index' %}">Patient</a></li>
+    <li><a href="{% url 'lab:index' %}">Lab</a></li>
+</ul>
+
 {% if all_patients %}
     <ul>
         {% for pat in all_patients %}
