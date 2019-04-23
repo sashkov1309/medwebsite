@@ -1,10 +1,23 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import Patient, MedicalTests
+from django.views import generic
+
+
+class IndexView(generic.ListView):
+    template_name = 'doctor/index.html'
+
+    def get_queryset(self):
+        return Patient.objects.all()
+
+
+class DetailView(generic.DetailView):
+    model = Patient
+    template_name = 'doctor/patient_details.html'
 
 
 def index(request):
-    return HttpResponse('<h1>doctor</h1>')
+    return render(request, 'doctor/index.html', {})
 
 
 def patient(request):

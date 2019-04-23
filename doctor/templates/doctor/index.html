@@ -1,21 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>DoctorPage</title>
-</head>
-<body>
+{% extends 'extends/base.html' %}
 
-<ul>
-    <li><a href="{% url 'main:login' %}">Login</a></li>
-    <li><a href="{% url 'doctor:index' %}">Doctor</a></li>
-    <li><a href="{% url 'patient:index' %}">Patient</a></li>
-    <li><a href="{% url 'lab:index' %}">Lab</a></li>
-</ul>
+{% block title %}
+    Doctor Index
+{% endblock %}
 
-{% if all_patients %}
+{% block content %}
+
+    {% if object_list %}
     <ul>
-        {% for pat in all_patients %}
+        {% for pat in object_list %}
             <li><a href="{{ pat.id }}">{{ pat.first_name }} {{ pat.last_name }}</a></li>
         {% endfor %}
     </ul>
@@ -23,6 +16,4 @@
     <h3>No Patients in DB!</h3>
 {% endif %}
 
-
-</body>
-</html>
+{% endblock %}

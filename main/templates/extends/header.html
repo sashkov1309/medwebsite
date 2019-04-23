@@ -19,8 +19,14 @@
             <a class="nav-link" href="{% url 'lab:index' %}">Lab</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link mr-auto" href="{% url 'main:login' %}">Login</a>
+            <a class="nav-link mr-auto" href="{% url 'login' %}">Login</a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link mr-auto" href="{% url 'logout' %}">Logout</a>
+        </li>
+
+
     </ul>
 
 </nav>
