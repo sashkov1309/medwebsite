@@ -1,0 +1,21 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}
+    Patients list
+{% endblock %}
+
+{% block content %}
+
+    {% if object_list %}
+    <ul class="list-group">
+        {% for pat in object_list %}
+            <li class="list-group-item"><a href="{% url 'doctor:patient_details' pat.id %}">
+                {{ pat.first_name }} {{ pat.last_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>No Patients in DB!</h3>
+    {% endif %}
+
+
+{% endblock %}

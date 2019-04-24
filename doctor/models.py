@@ -2,10 +2,14 @@ from django.db import models
 
 
 class Doctor(models.Model):
+    GENDER = (
+        (0, 'Male'),
+        (1, 'Female')
+    )
     first_name = models.CharField(max_length=45)
     middle_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
-    gender = models.BooleanField()
+    gender = models.BooleanField(choices=GENDER)
     post = models.CharField(max_length=45, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     address = models.CharField(max_length=90, blank=True)
@@ -17,10 +21,14 @@ class Doctor(models.Model):
 
 
 class Patient(models.Model):
+    GENDER = (
+        (0, 'Male'),
+        (1, 'Female')
+    )
     first_name = models.CharField(max_length=45)
     middle_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
-    gender = models.BooleanField()
+    gender = models.BooleanField(choices=GENDER)
     birth_date = models.DateField(blank=True)
     address = models.CharField(max_length=90, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
@@ -31,6 +39,9 @@ class Patient(models.Model):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
+    def __unicode__(self):
+        return self.first_name
 
 
 class TimeSchedule(models.Model):
@@ -49,3 +60,6 @@ class MedicalTests(models.Model):
     diagnosis = models.CharField(max_length=45)
     delivering_method = models.CharField(max_length=25)
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' ('+str(self.material)+ ')'

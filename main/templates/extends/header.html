@@ -18,13 +18,16 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'lab:index' %}">Lab</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link mr-auto" href="{% url 'login' %}">Login</a>
-        </li>
 
+        {% if user.is_authenticated %}
         <li class="nav-item">
             <a class="nav-link mr-auto" href="{% url 'logout' %}">Logout</a>
         </li>
+{% else %}
+        <li class="nav-item">
+            <a class="nav-link mr-auto" href="{% url 'login' %}">Login</a>
+        </li>
+{% endif %}
 
 
     </ul>

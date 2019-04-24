@@ -1,19 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>medtest_details</title>
-</head>
-<body>
+{% extends 'extends/base.html' %}
 
-<a href="{% url 'doctor:patient_details' patients.id %}" >back to patient details</a>
+{% block title %}
+    Medtest Details
+{% endblock %}
 
-<form action="{% url 'doctor:patient_details' patients.id %}" method="post">
-    {% csrf_token %}
-    {% for medtest in patients%}
+{% block content %}
+    <ul class="list-group">
+  <li class="list-group-item"  ><a href="{% url 'doctor:medtests' object.id %}">Back to Medtests</a></li>
+  <li class="list-group-item"><b>Medtest: </b> {{ object }}</li>
+  <li class="list-group-item"><b>Date_application: </b> {{ object.date_application }}</li>
+  <li class="list-group-item"><b>Date_registration: </b> {{ object.date_registration }}</li>
+  <li class="list-group-item"><b>Date_taking_material: </b> {{ object.date_taking_material }}</li>
+  <li class="list-group-item"><b>Target_date: </b> {{ object.target_date }}</li>
+  <li class="list-group-item"><b>Material: </b> {{ object.material }}</li>
+  <li class="list-group-item"><b>Diagnosis: </b> {{ object.diagnosis }}</li>
+  <li class="list-group-item"><b>Delivering_method: </b> {{ object.delivering_method }}</li>
+  <li class="list-group-item"><b>Patient_id: </b> {{ object.patient_id }}</li>
 
-    {% endfor %}
-</form>
-
-</body>
-</html>
+</ul>
+{% endblock %}
