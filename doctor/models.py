@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.urls import reverse
+
 
 class Doctor(models.Model):
     GENDER = (
@@ -37,11 +39,16 @@ class Patient(models.Model):
     notes = models.TextField(max_length=1000, blank=True)
     doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
 
+    def get_absolute_url(self):
+        return reverse('doctor:patient_details', kwargs={'pk': self.pk})
+
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
     def __unicode__(self):
         return self.first_name
+
+
 
 
 class TimeSchedule(models.Model):
@@ -62,4 +69,4 @@ class MedicalTests(models.Model):
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' ('+str(self.material)+ ')'
+        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(self.material) + ')'

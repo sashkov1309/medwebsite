@@ -8,13 +8,16 @@
 
     {% if object_list %}
    <ul class="list-group">
-   <li class="list-group-item" ><a href="{% url 'doctor:patient_details' object_list.0.patient_id.id %}">Back to Patient</a></li>
+   <li class="list-group-item" ><a href="{% url 'doctor:patient_details' view.kwargs.pk %}">Back to Patient</a></li>
         {% for med in object_list %}
             <li class="list-group-item"  ><a href="{% url 'doctor:medtest_details' med.patient_id.id med.id%}">{{ med }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
-    <h3>No Patients in DB!</h3>
+        <ul class="list-group">
+        <li class="list-group-item" ><a href="{% url 'doctor:patient_details' view.kwargs.pk %}">Back to Patient</a></li>
+            <li class="list-group-item"  >No Medtest Exists for this Patient!</li>
+    </ul>
 {% endif %}
 
 {% endblock %}

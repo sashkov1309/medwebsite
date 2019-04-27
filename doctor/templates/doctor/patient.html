@@ -14,7 +14,10 @@
         {% endfor %}
     </ul>
 {% else %}
-    <h3>No Patients in DB!</h3>
+    <ul class="list-group">
+        <li class="list-group-item" ><a href="{% url 'doctor:patients'%}">Back to Patients List</a></li>
+            <li class="list-group-item"  >No Patients exist!</li>
+    </ul>
     {% endif %}
 
 
