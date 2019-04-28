@@ -15,7 +15,7 @@
   <li class="list-group-item"><b>Material: </b> {{ object.material }}</li>
   <li class="list-group-item"><b>Diagnosis: </b> {{ object.diagnosis }}</li>
   <li class="list-group-item"><b>Delivering_method: </b> {{ object.delivering_method }}</li>
-  <li class="list-group-item"><b>Patient_id: </b> {{ object.patient_id }}</li>
-
+  <li class="list-group-item"><b>Status: </b> {{ object.get_status_display }}</li>
+  <li class="list-group-item"><b>Patient_id: </b> {{  object.get_readiness_display }}</li>
 </ul>
 {% endblock %}

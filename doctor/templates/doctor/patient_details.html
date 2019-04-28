@@ -9,11 +9,13 @@
         <li class="list-group-item"><a href="{% url 'doctor:patients' %}">Back to Patient List</a></li>
         <li class="list-group-item"><a href="{% url 'doctor:medtests' object.id %}">See Medtests</a></li>
         <li class="list-group-item"><a href="{% url 'doctor:update_patient' object.id %}">Update Patient info</a></li>
+        <li class="list-group-item"><a href="{% url 'doctor:medrefferal' object.id %}">Create new Medical Test</a></li>
         <li class="list-group-item"><h3>{{ object }}</h3></li>
         <li class="list-group-item"><b>First_name:</b> {{ object.first_name }}</li>
         <li class="list-group-item"><b>Middle_name:</b> {{ object.middle_name }}</li>
         <li class="list-group-item"><b>Last_name:</b> {{ object.last_name }}</li>
-        <li class="list-group-item"><b>Gender:</b> {{ object.gender }}</li>
+        <li class="list-group-item"><b>Passport:</b> {{ object.passport_id }}</li>
+        <li class="list-group-item"><b>Gender:</b> {{ object.get_gender_display }}</li>
         <li class="list-group-item"><b>Birth_date:</b> {{ object.birth_date }}</li>
         <li class="list-group-item"><b>Address:</b> {{ object.address }}</li>
         <li class="list-group-item"><b>Phone_number:</b> {{ object.phone_number }}</li>

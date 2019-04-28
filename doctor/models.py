@@ -30,6 +30,7 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=45)
     middle_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
+    passport_id = models.CharField(max_length=8, default='AA000000')
     gender = models.BooleanField(choices=GENDER)
     birth_date = models.DateField(blank=True)
     address = models.CharField(max_length=90, blank=True)
@@ -37,7 +38,7 @@ class Patient(models.Model):
     email = models.CharField(max_length=254, blank=True)
     blood_type = models.CharField(max_length=3, blank=True)
     notes = models.TextField(max_length=1000, blank=True)
-    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
 
     def get_absolute_url(self):
         return reverse('doctor:patient_details', kwargs={'pk': self.pk})
@@ -49,16 +50,18 @@ class Patient(models.Model):
         return self.first_name
 
 
-
-
 class TimeSchedule(models.Model):
     day_of_the_week = models.CharField(max_length=15)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
 
 
 class MedicalTests(models.Model):
+    READINESS = (
+        (0, 'In progress'),
+        (1, 'Ready')
+    )
     date_application = models.DateTimeField()
     date_registration = models.DateTimeField()
     date_taking_material = models.DateTimeField()
@@ -66,7 +69,9 @@ class MedicalTests(models.Model):
     material = models.CharField(max_length=45)
     diagnosis = models.CharField(max_length=45)
     delivering_method = models.CharField(max_length=25)
+    readiness = models.BooleanField(choices=READINESS, default=0)
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(self.material) + ')'
+        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(self.get_readiness_display()) + ')'

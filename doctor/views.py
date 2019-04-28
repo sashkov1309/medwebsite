@@ -38,6 +38,12 @@ class PatientCreate(CreateView):
               'blood_type', 'notes', 'doctor_id']
 
 
+class MedicalTestCreate(CreateView):
+    model = MedicalTests
+    fields = ['date_application', 'date_registration', 'date_taking_material', 'target_date', 'material',
+              'delivering_method', 'patient_id', 'doctor_id']
+
+
 class PatientUpdate(UpdateView):
     model = Patient
     fields = ['first_name', 'first_name', 'last_name', 'gender', 'birth_date', 'address', 'phone_number', 'email',
@@ -75,3 +81,30 @@ class MedicalTestsDetailView(generic.DetailView):
         p_id_ = self.kwargs.get("pk")
         m_id_ = self.kwargs.get("medpk")
         return get_object_or_404(MedicalTests, id=m_id_, patient_id=p_id_)
+
+
+class UserFormView(View):
+    form_class = UserForm
+    template_name = 'main/registration_form.html'
+
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            # cleaned (normalised) data
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user.set_password(password)
+            user.save()
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)

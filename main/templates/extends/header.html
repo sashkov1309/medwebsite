@@ -1,8 +1,6 @@
 <header>
 <nav class="navbar navbar-expand-sm bg-dark">
-
-    <!-- Links -->
-    <ul class="navbar-nav">
+    <ul class="navbar-nav mr-auto">
         <li class="nav-item">
             <a class="navbar-brand" href="{% url 'main:index' %}">Index</a>
         </li>
@@ -21,7 +19,7 @@
 
         {% if user.is_authenticated %}
         <li class="nav-item">
-            <a class="nav-link mr-auto" href="{% url 'logout' %}">Logout</a>
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
         </li>
 {% else %}
         <li class="nav-item">
