@@ -54,15 +54,11 @@ class PatientDelete(DeleteView):
     model = Patient
     success_url = reverse_lazy('doctor:index')
 
-
-class ScheduleView(generic.DetailView):
-    model = Patient
+class ScheduleView(generic.ListView):
     template_name = 'doctor/schedule.html'
-    queryset = TimeSchedule.objects.all()
 
-    def get_object(self, queryset=None):
-        id_ = self.kwargs.get("pk")
-        return get_object_or_404(TimeSchedule, doctor_id=id_)
+    def get_queryset(self):
+        return MedicalTests.objects.filter(doctor_id=self.kwargs.get("pk"))
 
 
 class MedicalTestsView(generic.ListView):
@@ -85,7 +81,7 @@ class MedicalTestsDetailView(generic.DetailView):
 
 class UserFormView(View):
     form_class = UserForm
-    template_name = 'main/registration_form.html'
+    template_name = 'doctor/registration_form.html'
 
     def get(self, request):
         form = self.form_class(None)

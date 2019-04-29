@@ -1,9 +1,11 @@
 {% extends 'extends/base.html' %}
 
 {% block title %}
-   Patient Index
+    Patient Index
 {% endblock %}
 
 {% block content %}
-
+    <ul>
+        <li class="list-group-item"><a href="{% url 'doctor:schedule' 1 %}">Schedule</a></li>
+    </ul>
 {% endblock %}

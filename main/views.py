@@ -9,7 +9,7 @@ def index(request):
 
 
 def login(request):
-    return render(request, 'main/login.html', {})
+    return render(request, 'registration/login.html', {})
 
 
 def info(request):
