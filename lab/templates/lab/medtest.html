@@ -1,0 +1,23 @@
+{% extends 'extends/base.html' %}
+
+{% block title %}
+    Tests TODO
+{% endblock %}
+
+{% block content %}
+
+    {% if object_list %}
+   <ul class="list-group">
+   <li class="list-group-item" ><a href="{% url 'lab:index'%}">Back to Index</a></li>
+        {% for med in object_list %}
+            <li class="list-group-item"  ><a href="{% url 'lab:medtest_details' med.id%}">{{ med }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+        <ul class="list-group">
+        <li class="list-group-item" ><a href="{% url 'lab:index'%}">Back to Index</a></li>
+            <li class="list-group-item"  >No Medtest Exists!</li>
+    </ul>
+{% endif %}
+
+{% endblock %}

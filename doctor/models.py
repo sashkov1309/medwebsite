@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 from django.urls import reverse
 
 
@@ -32,7 +32,7 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=45)
     passport_id = models.CharField(max_length=8, default='AA000000')
     gender = models.BooleanField(choices=GENDER)
-    birth_date = models.DateField(blank=True)
+    birth_date = models.DateField(blank=True, default=timezone.now)
     address = models.CharField(max_length=90, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     email = models.CharField(max_length=254, blank=True)
@@ -62,16 +62,19 @@ class MedicalTests(models.Model):
         (0, 'In progress'),
         (1, 'Ready')
     )
-    date_application = models.DateTimeField()
-    date_registration = models.DateTimeField()
-    date_taking_material = models.DateTimeField()
-    target_date = models.DateTimeField()
+    date_application = models.DateTimeField(default=timezone.now)
+    date_registration = models.DateTimeField(default=timezone.now)
+    date_taking_material = models.DateTimeField(default=timezone.now)
+    target_date = models.DateTimeField(default=timezone.now)
     material = models.CharField(max_length=45)
     diagnosis = models.CharField(max_length=45)
     delivering_method = models.CharField(max_length=25)
     readiness = models.BooleanField(choices=READINESS, default=0)
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
+
+    def get_absolute_url(self):
+        return reverse('doctor:medtest_details', kwargs={'pk': self.patient_id.pk, 'medpk': self.pk})
 
     def __str__(self):
         return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(self.get_readiness_display()) + ')'

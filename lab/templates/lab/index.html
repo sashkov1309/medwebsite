@@ -5,5 +5,8 @@
 {% endblock %}
 
 {% block content %}
-
+<ul class="list-group">
+<li class="list-group-item"><a href="{% url 'lab:medtests'%}">Finished Tests</a></li>
+    <li class="list-group-item"><a href="{% url 'lab:medtests_todo' %}">ToDo Tests</a></li>
+</ul>
 {% endblock %}

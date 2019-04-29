@@ -100,6 +100,7 @@ class UserFormView(View):
             # cleaned (normalised) data
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+
             user.set_password(password)
             user.save()
 
