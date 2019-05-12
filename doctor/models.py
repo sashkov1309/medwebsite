@@ -19,7 +19,7 @@ class Doctor(models.Model):
     exam_room = models.CharField(max_length=6, blank=True)
 
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return 'Doc.' + self.first_name + ' ' + self.last_name
 
 
 class Patient(models.Model):
@@ -51,10 +51,10 @@ class Patient(models.Model):
 
 
 class TimeSchedule(models.Model):
-    day_of_the_week = models.CharField(max_length=15)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
+    patient_id = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
 
 
 class MedicalTests(models.Model):
@@ -77,4 +77,5 @@ class MedicalTests(models.Model):
         return reverse('doctor:medtest_details', kwargs={'pk': self.patient_id.pk, 'medpk': self.pk})
 
     def __str__(self):
-        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(self.get_readiness_display()) + ')'
+        return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(
+            self.get_readiness_display()) + ')'

@@ -6,6 +6,15 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .forms import UserForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from datetime import datetime
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.views import generic
+from django.utils.safestring import mark_safe
+from .models import *
+from .utils import Calendar
+import dateutil.parser
+from datetime import datetime
 
 
 class IndexView(generic.ListView):
@@ -54,12 +63,6 @@ class PatientDelete(DeleteView):
     model = Patient
     success_url = reverse_lazy('doctor:index')
 
-class ScheduleView(generic.ListView):
-    template_name = 'doctor/schedule.html'
-
-    def get_queryset(self):
-        return MedicalTests.objects.filter(doctor_id=self.kwargs.get("pk"))
-
 
 class MedicalTestsView(generic.ListView):
     template_name = 'doctor/medtest.html'
@@ -105,3 +108,30 @@ class UserFormView(View):
             if user is not None:
                 if user.is_active:
                     login(request, user)
+
+
+class CalendarView(generic.ListView):
+    model = TimeSchedule
+    template_name = 'doctor/schedule.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # use today's date for the calendar
+
+        d = get_date(self.request.GET.get('day', None))
+
+        # Instantiate our calendar class with today's year and date
+        cal = Calendar(d.year, d.month, self.kwargs.get("pk"))
+
+        # Call the formatmonth method, which returns our calendar as a table
+        html_cal = cal.formatmonth(withyear=True)
+        context['calendar'] = mark_safe(html_cal)
+        return context
+
+
+def get_date(req_day):
+    if req_day:
+        year, month = (int(x) for x in req_day.split('-'))
+        return date(year, month, day=1)
+    return datetime.today()
