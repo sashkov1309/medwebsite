@@ -13,3 +13,6 @@ python manage.py shell
 
 # create superuser
 python manage.py createsuperuser
+
+base.html
+ <!--<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.css' %}"/>-->

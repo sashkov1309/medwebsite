@@ -1,6 +1,16 @@
+from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import UserManager
+from django.db import models
+from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.utils.translation import ugettext_lazy as _
 
 
 class Doctor(models.Model):
@@ -23,6 +33,17 @@ class Doctor(models.Model):
 
 
 class Patient(models.Model):
+    BLOOD_TYPE = (
+        (0, 'O+'),
+        (1, 'O-'),
+        (2, 'B-'),
+        (3, 'B+'),
+        (4, 'A-'),
+        (5, 'A+'),
+        (6, 'AB-'),
+        (7, 'AB+')
+    )
+
     GENDER = (
         (0, 'Male'),
         (1, 'Female')
@@ -36,9 +57,11 @@ class Patient(models.Model):
     address = models.CharField(max_length=90, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     email = models.CharField(max_length=254, blank=True)
-    blood_type = models.CharField(max_length=3, blank=True)
+    blood_type = models.IntegerField(choices=BLOOD_TYPE)
     notes = models.TextField(max_length=1000, blank=True)
     doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
+
+    # user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('doctor:patient_details', kwargs={'pk': self.pk})
@@ -79,3 +102,23 @@ class MedicalTests(models.Model):
     def __str__(self):
         return 'Test #' + str(self.id) + ' ' + str(self.date_application) + ' (' + str(
             self.get_readiness_display()) + ')'
+
+
+class UserProfile(AbstractBaseUser, PermissionsMixin):
+    accType = (
+        (0, 'Unknown'),
+        (1, 'Doctor'),
+        (2, 'LabAssistant'),
+        (3, 'Patient'),
+    )
+    username = models.CharField(max_length=25, unique=True)
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    acc_type = models.IntegerField(choices=accType, default=0)
+    pat_ref = models.OneToOneField(Patient, on_delete=models.CASCADE, null=True, blank=True)
+    doc_ref = models.OneToOneField(Doctor, on_delete=models.CASCADE, null=True, blank=True)
+    USERNAME_FIELD = "username"
+    objects = UserManager()
+    REQUIRED_FIELDS = ["email"]
