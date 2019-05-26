@@ -1,34 +1,58 @@
 <header>
-<nav class="navbar navbar-expand-sm bg-dark">
-    <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-            <a class="navbar-brand" href="{% url 'main:index' %}">Index</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'main:info' %}">Info</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'patient:index' %}">Patient</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'doctor:index' %}">Doctor</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'lab:index' %}">Lab</a>
-        </li>
+    <nav class="navbar navbar-expand-sm bg-dark">
+        <ul class="navbar-nav mr-auto">
 
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-        </li>
-{% else %}
-        <li class="nav-item">
-            <a class="nav-link mr-auto" href="{% url 'login' %}">Login</a>
-        </li>
-{% endif %}
+            <li class="nav-item active">
+                <a class="navbar-brand nav-link text-success">
+                {% if user.acc_type == 3%}
+                    {{ user.pat_ref }}
+                {% elif user.acc_type == 4 %}
+                    {{ user.doc_ref }}
+                {% endif %}
+                ({{user.username}})
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'main:index' %}">Main Page</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'main:info' %}">Info / Help</a>
+            </li>
+
+            {% if user.is_authenticated %}
+
+                {% if user.acc_type == 1 %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'doctor:index' %}">Doctor Panel</a>
+                    </li>
+                {% elif user.acc_type == 2 %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lab:index' %}">Lab Tests Panel</a>
+                    </li>
+                {% elif user.acc_type == 3 %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'patient:index' %}">Actions</a>
+                    </li>
+                {% elif user.acc_type == 4 %}
+
+                {% endif %}
+            {% endif %}
 
 
-    </ul>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link mr-auto" href="{% url 'login' %}">Login</a>
+                </li>
+            {% endif %}
 
-</nav>
+
+        </ul>
+
+    </nav>
 </header>

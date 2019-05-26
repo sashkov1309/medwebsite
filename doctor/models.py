@@ -110,6 +110,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         (1, 'Doctor'),
         (2, 'LabAssistant'),
         (3, 'Patient'),
+        (4, 'Admin'),
     )
     username = models.CharField(max_length=25, unique=True)
     email = models.EmailField(unique=True)
@@ -118,7 +119,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     acc_type = models.IntegerField(choices=accType, default=0)
     pat_ref = models.OneToOneField(Patient, on_delete=models.CASCADE, null=True, blank=True)
-    doc_ref = models.OneToOneField(Doctor, on_delete=models.CASCADE, null=True, blank=True)
+    doc_ref = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
     USERNAME_FIELD = "username"
     objects = UserManager()
     REQUIRED_FIELDS = ["email"]
