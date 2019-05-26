@@ -29,7 +29,7 @@ class Doctor(models.Model):
     exam_room = models.CharField(max_length=6, blank=True)
 
     def __str__(self):
-        return 'Doc.' + self.first_name + ' ' + self.last_name
+        return 'Doc. ' + self.first_name + ' ' + self.last_name
 
 
 class Patient(models.Model):

@@ -11,8 +11,6 @@ class UserForm(forms.ModelForm):
         (2, 'Lab')
     )
     password = forms.CharField(widget=forms.PasswordInput)
-    # patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True)
-    # account_type = models.IntegerField(choices=TYPES)
 
     class Meta:
         model = User

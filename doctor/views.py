@@ -135,3 +135,8 @@ def get_date(req_day):
         year, month = (int(x) for x in req_day.split('-'))
         return date(year, month, day=1)
     return datetime.today()
+
+
+class ApplyForVisitView(CreateView):
+    model = TimeSchedule
+    fields = ['start_time', 'end_time', 'doctor_id', 'patient_id']

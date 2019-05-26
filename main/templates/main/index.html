@@ -1,16 +1,51 @@
 {% extends 'extends/base.html' %}
 
 {% block title %}
-   Main Index
+    Main Page
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  <br>
-    <h1>Hi {{ user.username }}!</h1>
-<br>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
-{% endif %}
+
+    {% if user.is_authenticated %}
+        <ul class="list-group">
+            {% if user.acc_type == 1 %}
+                <li class="list-group-item"><h3>You are logged in as: <br><b>{{ user.doc_ref }}</b></h3></li>
+                <li class="list-group-item"><b>Username:</b> {{ user.username }}</li>
+                <li class="list-group-item"><b>First_name:</b> {{ user.doc_ref.first_name }}</li>
+                <li class="list-group-item"><b>Middle_name:</b> {{ user.doc_ref.middle_name }}</li>
+                <li class="list-group-item"><b>Last_name:</b> {{ user.doc_ref.last_name }}</li>
+                <li class="list-group-item"><b>Gender:</b> {{ user.doc_ref.get_gender_display }}</li>
+                <li class="list-group-item"><b>Post:</b> {{ user.doc_ref.post }}</li>
+                <li class="list-group-item"><b>Address:</b> {{ user.doc_ref.address }}</li>
+                <li class="list-group-item"><b>Phone_number:</b> {{ user.doc_ref.phone_number }}</li>
+                <li class="list-group-item"><b>Email:</b> {{ user.doc_ref.email }}</li>
+                <li class="list-group-item"><b>Exam_room":</b> {{ user.doc_ref.exam_room }}</li>
+            {% elif user.acc_type == 2 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lab:index' %}">Lab Tests Panel</a>
+                </li>
+            {% elif user.acc_type == 3 %}
+                <li class="list-group-item"><h3>You are logged in as: <br><b>{{ user.pat_ref }}</b></h3></li>
+                <li class="list-group-item"><b>Username:</b> {{ user.username }}</li>
+                <li class="list-group-item"><b>First_name:</b> {{ user.pat_ref.first_name }}</li>
+                <li class="list-group-item"><b>Middle_name:</b> {{ user.pat_ref.middle_name }}</li>
+                <li class="list-group-item"><b>Last_name:</b> {{ user.pat_ref.last_name }}</li>
+                <li class="list-group-item"><b>Passport:</b> {{ user.pat_ref.passport_id }}</li>
+                <li class="list-group-item"><b>Gender:</b> {{ user.pat_ref.get_gender_display }}</li>
+                <li class="list-group-item"><b>Birth_date:</b> {{ user.pat_ref.birth_date }}</li>
+                <li class="list-group-item"><b>Address:</b> {{ user.pat_ref.address }}</li>
+                <li class="list-group-item"><b>Phone_number:</b> {{ user.pat_ref.phone_number }}</li>
+                <li class="list-group-item"><b>Email:</b> {{ user.pat_ref.email }}</li>
+                <li class="list-group-item"><b>Blood_type":</b> {{ user.pat_ref.blood_type }}</li>
+                <li class="list-group-item"><b>Notes:</b> {{ user.pat_ref.notes }}  </li>
+                <li class="list-group-item"><b>Doctor:</b> {{ user.pat_ref.doctor_id }}</li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <ul class="list-group">
+            <li class="list-group-item"><a>You are not logged in!</a></li>
+            <li class="list-group-item"><a href="{% url 'login' %}">Login Here</a></li>
+        </ul>
+    {% endif %}
+
 {% endblock %}
