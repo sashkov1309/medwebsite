@@ -130,30 +130,31 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 class Schedule(models.Model):
     AVAILABLE_TIME = (
-        (0, '9:00'),
-        (1, '9:30'),
-        (2, '10:00'),
-        (3, '10:30'),
-        (4, '11:00'),
-        (5, '11:30'),
-        (6, '12:00'),
-        (7, '12:30'),
-        (8, '13:00'),
-        (9, '13:30'),
-        (10, '14:00'),
-        (11, '14:30'),
-        (12, '15:00'),
-        (13, '15:30'),
-        (14, '16:00'),
-        (15, '16:30'),
-        (16, '17:00'),
-        (17, '17:30'),
+        (0, '9:00 - 9:30'),
+        (1, '9:30 - 10:00'),
+        (2, '10:00 - 10:30'),
+        (3, '10:30 - 11:00'),
+        (4, '11:00 - 11:30'),
+        (5, '11:30 - 12:00'),
+        (6, '12:00 - 12:30'),
+        (7, '12:30 - 13:00'),
+        (8, '13:00 - 13:30'),
+        (9, '13:30 - 14:00'),
+        (10, '14:00 - 14:30'),
+        (11, '14:30 - 15:00'),
+        (12, '15:00 - 15:30'),
+        (13, '15:30 - 16:00'),
+        (14, '16:00 - 16:30'),
+        (15, '16:30 - 17:00'),
+        (16, '17:00 - 17:30'),
+        (17, '17:30 - 18:00'),
     )
 
     day = models.DateField()
     time = models.IntegerField(choices=AVAILABLE_TIME)
+    note = models.CharField(blank=True, null=True, max_length=50)
     doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.patient_id) + ' (' + str(self.day) + ' - ' + str(self.time) + ')'
+        return str(self.day) + ' - (' + str(self.get_time_display()) + ') ' + str(self.patient_id)

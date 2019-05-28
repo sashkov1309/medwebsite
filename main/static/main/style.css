@@ -45,3 +45,8 @@ a {
 .date {
   font-size: 15px;
 }
+
+.booked {
+  color: red;
+  font-size: 15px;
+}

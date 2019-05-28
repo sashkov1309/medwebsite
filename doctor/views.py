@@ -147,30 +147,42 @@ class WeekView(generic.ListView):
     template_name = 'doctor/week.html'
 
     def get_context_data(self, **kwargs):
-        # fin = super().get_context_data(**kwargs)
         fin = {}
-        #  <li class="list-group-item"><b>Post:</b> {{ user.doc_ref.post }}</li>
         d_id = Doctor.objects.get(pk=self.kwargs.get("pk"))
+        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        allowed_users = [1, 4]
+
+        # acc_type = None
+        # if self.request.user.is_authenticated():
+        #     acc_type = self.request.user.get_acc_type()
 
         curr_date = datetime.today()
         start_week = curr_date - timedelta(curr_date.weekday())
-        end_week = start_week + timedelta(7)
+        end_week = start_week + timedelta(6)
 
         objects = Schedule.objects.filter(doctor_id=d_id, day__range=[start_week, end_week])
         context = '<ul class="list-group">'
         context += '<li class="list-group-item"><b>'
-        context += str(start_week.date()) + ' - '
-        context += str(end_week.date()) + '</b></li>'
+        context += str(start_week.date()) + ' (' + str(days[start_week.weekday()]) + ') - '
+        context += str(end_week.date()) + ' (' + str(days[end_week.weekday()]) + ')</b>'
+        context += '<i> Current date: ' + str(curr_date.date()) + ' (' + str(days[curr_date.weekday()]) + ')</i></li>'
 
-        days = ['Monday', 'Tuesday', 'Wednesday', 'Thurs day', 'Friday']
-        for i in range(days.__len__()):
-            context += '<li class="list-group-item"><b>' + days[i] + '</b></li>'
+        for i in range(days.__len__() - 2):
+            context += '<li class="list-group-item" style="font-size: 150%"><b>' + days[i] + '</b>'
+            if i == curr_date.weekday():
+                context += ' <i>(Today)</i>'
+            context += '</li>'
             for obj in objects:
                 if i == obj.day.weekday():
                     item = '<li class="list-group-item">'
-                    item += str(obj.get_time_display()) + ' ' + str(obj.patient_id)
-                    item += '</li>'
+                    item += str(obj.get_time_display())
 
+                    if self.request.user.acc_type in allowed_users:
+                        item += ' Patient: ' + str(obj.patient_id)
+                        item += ' Note: ' + str(obj.note) + '</i>'
+                    else:
+                        item += '<div class="booked"><i> Booked</i></div>'
+                    item += '</li>'
                     context += item
             if i != 4:
                 context += '<li class="list-group-item"></li>'
