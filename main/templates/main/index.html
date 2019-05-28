@@ -21,9 +21,8 @@
                 <li class="list-group-item"><b>Email:</b> {{ user.doc_ref.email }}</li>
                 <li class="list-group-item"><b>Exam_room":</b> {{ user.doc_ref.exam_room }}</li>
             {% elif user.acc_type == 2 %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'lab:index' %}">Lab Tests Panel</a>
-                </li>
+                <li class="list-group-item"><h3>You are logged in as: <br><b>{{ user.username }}</b></h3></li>
+                <li class="list-group-item"><b>Email:</b> {{ user.email }}</li>
             {% elif user.acc_type == 3 %}
                 <li class="list-group-item"><h3>You are logged in as: <br><b>{{ user.pat_ref }}</b></h3></li>
                 <li class="list-group-item"><b>Username:</b> {{ user.username }}</li>

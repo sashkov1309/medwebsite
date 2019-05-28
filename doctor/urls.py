@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('schedule/', views.CalendarView.as_view(), name='schedule'),
     path('schedule/<int:pk>', views.CalendarView.as_view(), name='schedule'),
+    path('week/<int:pk>', views.WeekView.as_view(), name='week'),
     path('schedule/apply/<int:pk>', views.ApplyForVisitView.as_view(), name='apply_for_visit'),
 
     path('userform/', views.UserFormView.as_view(), name='userform'),

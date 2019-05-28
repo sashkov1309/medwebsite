@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .forms import UserForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from datetime import datetime
+from datetime import datetime, date, time, timedelta
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import generic
@@ -140,3 +140,40 @@ def get_date(req_day):
 class ApplyForVisitView(CreateView):
     model = TimeSchedule
     fields = ['start_time', 'end_time', 'doctor_id', 'patient_id']
+
+
+class WeekView(generic.ListView):
+    model = Schedule
+    template_name = 'doctor/week.html'
+
+    def get_context_data(self, **kwargs):
+        # fin = super().get_context_data(**kwargs)
+        fin = {}
+        #  <li class="list-group-item"><b>Post:</b> {{ user.doc_ref.post }}</li>
+        d_id = Doctor.objects.get(pk=self.kwargs.get("pk"))
+
+        curr_date = datetime.today()
+        start_week = curr_date - timedelta(curr_date.weekday())
+        end_week = start_week + timedelta(7)
+
+        objects = Schedule.objects.filter(doctor_id=d_id, day__range=[start_week, end_week])
+        context = '<ul class="list-group">'
+        context += '<li class="list-group-item"><b>'
+        context += str(start_week.date()) + ' - '
+        context += str(end_week.date()) + '</b></li>'
+
+        days = ['Monday', 'Tuesday', 'Wednesday', 'Thurs day', 'Friday']
+        for i in range(days.__len__()):
+            context += '<li class="list-group-item"><b>' + days[i] + '</b></li>'
+            for obj in objects:
+                if i == obj.day.weekday():
+                    item = '<li class="list-group-item">'
+                    item += str(obj.get_time_display()) + ' ' + str(obj.patient_id)
+                    item += '</li>'
+
+                    context += item
+            if i != 4:
+                context += '<li class="list-group-item"></li>'
+        context += '</ul>'
+        fin['week'] = mark_safe(context)
+        return fin
