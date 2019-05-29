@@ -73,16 +73,6 @@ class Patient(models.Model):
         return self.first_name
 
 
-class TimeSchedule(models.Model):
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    doctor_id = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
-    patient_id = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return str(self.patient_id) + ' (' + str(self.start_time) + ' - ' + str(self.end_time) + ')'
-
-
 class MedicalTests(models.Model):
     READINESS = (
         (0, 'In progress'),
@@ -121,7 +111,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     acc_type = models.IntegerField(choices=accType, default=0)
-    pat_ref = models.OneToOneField(Patient, on_delete=models.CASCADE, null=True, blank=True)
+    pat_ref = models.OneToOneField(Patient, on_delete=models.CASCADE, null=True, blank=True, unique=True)
     doc_ref = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
     USERNAME_FIELD = "username"
     objects = UserManager()
@@ -158,3 +148,6 @@ class Schedule(models.Model):
 
     def __str__(self):
         return str(self.day) + ' - (' + str(self.get_time_display()) + ') ' + str(self.patient_id)
+
+    def get_absolute_url(self):
+        return reverse('main:index')

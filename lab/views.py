@@ -15,7 +15,7 @@ class MedicalTestsUpdate(UpdateView):
 
 
 class MedicalTestsView(generic.ListView):
-    template_name = 'lab/medtest.html'
+    template_name = 'doctor/medtest.html'
 
     def get_queryset(self):
         try:
@@ -26,7 +26,7 @@ class MedicalTestsView(generic.ListView):
 
 
 class MedicalTestsTODOView(generic.ListView):
-    template_name = 'lab/medtest.html'
+    template_name = 'doctor/medtest.html'
 
     def get_queryset(self):
         try:
@@ -38,7 +38,7 @@ class MedicalTestsTODOView(generic.ListView):
 
 class MedicalTestsDetailView(generic.DetailView):
     model = MedicalTests
-    template_name = 'lab/medtest_details.html'
+    template_name = 'doctor/medtest_details.html'
     queryset = Patient.objects.all()
 
     def get_object(self, queryset=None):

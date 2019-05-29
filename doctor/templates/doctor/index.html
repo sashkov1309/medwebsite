@@ -9,7 +9,7 @@
     <ul class="list-group">
         <li class="list-group-item"><a href="{% url 'doctor:patients' %}">Patients</a></li>
         <li class="list-group-item"><a href="{% url 'doctor:create_patient' %}">Create Patient</a></li>
-        <li class="list-group-item"><a href="{% url 'doctor:schedule' user.doc_ref %}">Schedule</a></li>
+        <li class="list-group-item"><a href="{% url 'doctor:schedule' user.doc_ref.pk %}">Schedule</a></li>
         <li class="list-group-item"><a href="{% url 'doctor:userform' %}">Create User Account</a></li>
     </ul>
 

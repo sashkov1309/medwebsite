@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Patient, MedicalTests, TimeSchedule
+from .models import Patient, MedicalTests, Schedule
 from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
@@ -12,10 +12,13 @@ from django.http import HttpResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from .models import *
-from .utils import Calendar
 import dateutil.parser
 from datetime import datetime
+from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 
+
+# from django.forms.extras.widgets import SelectDateWidget
 
 class IndexView(generic.ListView):
     template_name = 'doctor/index.html'
@@ -95,51 +98,37 @@ class UserFormView(View):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            user = form.save(commit=False)
-            # cleaned (normalised) data
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            user = form.save(commit=True)
+            # username = form.cleaned_data['username']
+            # password = form.cleaned_data['password']
+            #
+            # user.set_password(password)
+            # user.save()
+            #
+            # user = authenticate(username=username, password=password)
+            #
+            # if user is not None:
+            #     if user.is_active:
+            #         login(request, user)
 
-            user.set_password(password)
-            user.save()
-
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-
-
-class CalendarView(generic.ListView):
-    model = TimeSchedule
-    template_name = 'doctor/schedule.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # use today's date for the calendar
-
-        d = get_date(self.request.GET.get('day', None))
-
-        # Instantiate our calendar class with today's year and date
-        cal = Calendar(d.year, d.month, self.kwargs.get("pk"))
-
-        # Call the formatmonth method, which returns our calendar as a table
-        html_cal = cal.formatmonth(withyear=True)
-        context['calendar'] = mark_safe(html_cal)
-        return context
-
-
-def get_date(req_day):
-    if req_day:
-        year, month = (int(x) for x in req_day.split('-'))
-        return date(year, month, day=1)
-    return datetime.today()
+        return render(request, 'doctor/index.html')
 
 
 class ApplyForVisitView(CreateView):
-    model = TimeSchedule
-    fields = ['start_time', 'end_time', 'doctor_id', 'patient_id']
+    model = Schedule
+    fields = ['day', 'time', 'note', 'doctor_id', 'patient_id']
+
+    def get_initial(self):
+        initial_data = super(ApplyForVisitView, self).get_initial()
+        initial_data['patient_id'] = self.request.user.pat_ref
+        initial_data['doctor_id'] = self.request.user.doc_ref
+        initial_data['day'] = date.today()
+        return initial_data
+
+    # def get_form(self):
+    #     form = super(ApplyForVisitView, self).get_form()
+    #     form.fields['day'].widget = forms.SelectDateWidget()
+    #     return form
 
 
 class WeekView(generic.ListView):
@@ -151,10 +140,6 @@ class WeekView(generic.ListView):
         d_id = Doctor.objects.get(pk=self.kwargs.get("pk"))
         days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         allowed_users = [1, 4]
-
-        # acc_type = None
-        # if self.request.user.is_authenticated():
-        #     acc_type = self.request.user.get_acc_type()
 
         curr_date = datetime.today()
         start_week = curr_date - timedelta(curr_date.weekday())
@@ -178,8 +163,8 @@ class WeekView(generic.ListView):
                     item += str(obj.get_time_display())
 
                     if self.request.user.acc_type in allowed_users:
-                        item += ' Patient: ' + str(obj.patient_id)
-                        item += ' Note: ' + str(obj.note) + '</i>'
+                        item += ' <b>Patient:</b> ' + str(obj.patient_id)
+                        item += ' <b>Note:</b> ' + str(obj.note) + '</i>'
                     else:
                         item += '<div class="booked"><i> Booked</i></div>'
                     item += '</li>'
