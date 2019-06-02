@@ -145,6 +145,9 @@ class Schedule(models.Model):
     doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ('day', 'time', 'doctor_id')
+
     def __str__(self):
         return str(self.day) + ' - (' + str(self.get_time_display()) + ') ' + str(self.patient_id)
 

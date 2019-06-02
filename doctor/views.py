@@ -42,12 +42,6 @@ class PatientDetailView(generic.DetailView):
         return get_object_or_404(Patient, id=id_)
 
 
-class MedicalTestCreate(CreateView):
-    model = MedicalTests
-    fields = ['date_application', 'date_registration', 'date_taking_material', 'target_date', 'material',
-              'delivering_method', 'patient_id', 'doctor_id']
-
-
 class PatientDelete(DeleteView):
     model = Patient
     success_url = reverse_lazy('doctor:patients')
@@ -69,23 +63,6 @@ class MedicalTestsDetailView(generic.DetailView):
         p_id_ = self.kwargs.get("pk")
         m_id_ = self.kwargs.get("medpk")
         return get_object_or_404(MedicalTests, id=m_id_, patient_id=p_id_)
-
-
-class ApplyForVisitView(CreateView):
-    model = Schedule
-    fields = ['day', 'time', 'note', 'doctor_id', 'patient_id']
-
-    def get_initial(self):
-        initial_data = super(ApplyForVisitView, self).get_initial()
-        initial_data['patient_id'] = self.request.user.pat_ref
-        initial_data['doctor_id'] = self.request.user.doc_ref
-        initial_data['day'] = date.today()
-        return initial_data
-
-    # def get_form(self):
-    #     form = super(ApplyForVisitView, self).get_form()
-    #     form.fields['day'].widget = forms.SelectDateWidget()
-    #     return form
 
 
 class WeekView(generic.ListView):
@@ -149,18 +126,14 @@ class UserFormView(View):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            user = form.save(commit=True)
-            # username = form.cleaned_data['username']
-            # password = form.cleaned_data['password']
-            #
-            # user.set_password(password)
-            # user.save()
-            #
-            # user = authenticate(username=username, password=password)
-            #
-            # if user is not None:
-            #     if user.is_active:
-            #         login(request, user)
+            user = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user.set_password(password)
+            user.save()
+
+            user = authenticate(username=username, password=password)
 
         return render(request, 'doctor/index.html')
 
@@ -190,7 +163,7 @@ def patient_create_form_view(request):
         return HttpResponseRedirect(reverse('doctor:patient_details',
                                             kwargs={'pk': data.pk}))
 
-    return render(request, 'doctor/forms/patient_create_form.html', context)
+    return render(request, 'doctor/forms/patient_form.html', context)
 
 
 def patient_update_form_view(request, pk):
@@ -211,7 +184,7 @@ def patient_update_form_view(request, pk):
         return HttpResponseRedirect(reverse('doctor:patient_details',
                                             kwargs={'pk': data.pk}))
 
-    return render(request, 'doctor/forms/patient_create_form.html', context)
+    return render(request, 'doctor/forms/patient_form.html', context)
 
 
 def medtests_create_form_view(request, pk):
@@ -227,7 +200,7 @@ def medtests_create_form_view(request, pk):
                                             kwargs={'pk': data.patient_id.pk,
                                                     'medpk': data.pk}))
 
-    return render(request, 'doctor/forms/medtest_create_form.html', context)
+    return render(request, 'doctor/forms/medtest_form.html', context)
 
 
 def medtests_update_form_view(request, pk):
@@ -247,4 +220,4 @@ def medtests_update_form_view(request, pk):
                                             kwargs={'pk': data.patient_id.pk,
                                                     'medpk': data.pk}))
 
-    return render(request, 'doctor/forms/medtest_create_form.html', context)
+    return render(request, 'doctor/forms/medtest_form.html', context)

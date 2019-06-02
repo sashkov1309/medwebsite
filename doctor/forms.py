@@ -117,7 +117,7 @@ class MedicalTestsForm(forms.ModelForm):
             'date_taking_material': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'target_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'material': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Material', 'type': 'text'}),
-            'diagnosis': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Result', 'type': 'text'}),
+            'diagnosis': forms.Textarea(attrs={'size': 10, 'class': 'form-control', 'placeholder': 'Result', 'type': 'text'}),
             'delivering_method': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Delivering Method',
                                                         'type': 'text'}),
             'readiness': widgets.Select(attrs={'class': 'select, form-control'}),
@@ -128,6 +128,7 @@ class MedicalTestsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(MedicalTestsForm, self).__init__(*args, **kwargs)
+        self.fields['diagnosis'].label = "Test Result"
         if self.request.user.acc_type == 2:  # lab
             self.fields['date_application'].widget.attrs['readonly'] = True
             self.fields['material'].widget.attrs['readonly'] = True
@@ -139,6 +140,8 @@ class MedicalTestsForm(forms.ModelForm):
             self.fields['date_taking_material'].widget.attrs['readonly'] = True
             self.fields['target_date'].widget.attrs['readonly'] = True
             self.fields['readiness'].widget.attrs['readonly'] = True
-            self.fields['readiness'].widget.attrs['disabled'] = True
+            # self.fields['readiness'].widget.attrs['disabled'] = True
             self.fields['patient_id'].widget.attrs['readonly'] = True
             self.fields['doctor_id'].widget.attrs['readonly'] = True
+            self.fields['diagnosis'].widget.attrs['readonly'] = True
+            self.fields['diagnosis'].required = False

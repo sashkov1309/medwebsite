@@ -1,20 +1,42 @@
 {% extends 'extends/base.html' %}
 
 {% block title %}
-    Patient Index
+    Login
 {% endblock %}
 
 {% block content %}
 
-    {% if user.is_authenticated %}
-        <p>You are logged in, {{ user.username }}!</p>
-    {% else %}
-        <h2>Login</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
-    {% endif %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% if user.is_authenticated %}
+                            <p>You are logged in, {{ user.username }}!</p>
+                        {% else %}
+                            <h2>Login</h2>
+                            <form class="form-horizontal" method="post">
+                                {% csrf_token %}
+
+                                <label class="label label-default">{{ form.username.label_tag }}</label>
+                                {{ form.username }}
+
+                                <br>
+                                <div class="fieldWrapper">
+                                    <label class="label label-default">{{ form.password.label_tag }}</label>
+                                    {{ form.password }}
+                                </div>
+
+                                <button type="submit" class="btn btn-success">Login</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 
 {% endblock %}
