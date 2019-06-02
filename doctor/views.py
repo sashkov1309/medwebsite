@@ -215,14 +215,38 @@ def patient_update_form_view(request, pk):
 
 
 def medtests_create_form_view(request, pk):
-    form = MedicalTestsForm(request.POST or None)
+    form = MedicalTestsForm(request.POST or None,
+                            initial={"doctor_id": request.user.doc_ref,
+                                         "patient_id": Patient.objects.get(pk=pk),
+                                         "readiness": 0}, request=request)
 
-    context = {
-        'form': form
-    }
+    context = {'form': form}
     if form.is_valid():
         data = form.save()
         return HttpResponseRedirect(reverse('doctor:medtest_details',
-                                            kwargs={'pk': data.pk}))
+                                            kwargs={'pk': data.patient_id.pk,
+                                                    'medpk': data.pk    }))
+
+    return render(request, 'doctor/forms/medtest_create_form.html', context)
+
+
+
+
+def medtests_update_form_view(request, pk):
+    med = MedicalTests.objects.get(pk=pk)
+    form = MedicalTestsForm(instance=med, request=request)
+
+    if request.method == 'POST':
+        form = MedicalTestsForm(request.POST, instance=med, request=request)
+        if form.is_valid():
+            form.save()
+
+    context = {'form': form}
+
+    if form.is_valid():
+        data = form.save()
+        return HttpResponseRedirect(reverse('doctor:medtest_details',
+                                            kwargs={'pk': data.patient_id.pk,
+                                                    'medpk': data.pk}))
 
     return render(request, 'doctor/forms/medtest_create_form.html', context)

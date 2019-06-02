@@ -8,7 +8,7 @@
     <ul class="list-group">
         {% if user.acc_type == 1 %}
         <li class="list-group-item"><a href="{% url 'doctor:medtests' object.patient_id.id %}">Back to Medtests</a></li>
-        {% elif user.acc_type == 4 %}
+        {% elif user.acc_type == 2 %}
         <li class="list-group-item"><a href="{% url 'lab:medtests_update' object.id %}">Update Medtest</a></li>
         {% endif %}
         <li class="list-group-item"><b>Medtest: </b> {{ object }}</li>
