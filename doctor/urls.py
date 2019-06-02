@@ -8,14 +8,17 @@ urlpatterns = [
 
     path('patient/', views.PatientsView.as_view(), name='patients'),
     path('patient/<int:pk>', views.PatientDetailView.as_view(), name='patient_details'),
+
+
     path('patient/add/', views.patient_create_form_view, name='create_patient'),
-    path('patient/<int:pk>/update/', views.PatientUpdate.as_view(), name='update_patient'),
+    path('patient/<int:pk>/update/', views.patient_update_form_view, name='update_patient'),
     path('patient/<int:pk>/delete/', views.PatientDelete.as_view(), name='delete_patient'),
 
     path('patient/<int:pk>/medtest/', views.MedicalTestsView.as_view(), name='medtests'),
-
     path('patient/<int:pk>/medtest/<int:medpk>', views.MedicalTestsDetailView.as_view(), name='medtest_details'),
-    path('patient/<int:pk>/medrefferal/', views.MedicalTestCreate.as_view(), name='medrefferal'),
+
+    # path('patient/<int:pk>/medrefferal/', views.MedicalTestCreate.as_view(), name='medrefferal'),
+    path('patient/<int:pk>/medrefferal/', views.medtests_create_form_view, name='medrefferal'),
 
     path('schedule/<int:pk>/', views.WeekView.as_view(), name='schedule'),
     path('schedule/apply/', views.schedule_form_view, name='apply_for_visit'),
