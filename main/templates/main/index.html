@@ -35,7 +35,7 @@
                 <li class="list-group-item"><b>Address:</b> {{ user.pat_ref.address }}</li>
                 <li class="list-group-item"><b>Phone_number:</b> {{ user.pat_ref.phone_number }}</li>
                 <li class="list-group-item"><b>Email:</b> {{ user.pat_ref.email }}</li>
-                <li class="list-group-item"><b>Blood_type":</b> {{ user.pat_ref.blood_type }}</li>
+                <li class="list-group-item"><b>Blood_type":</b> {{ user.pat_ref.get_blood_type_display }}</li>
                 <li class="list-group-item"><b>Notes:</b> {{ user.pat_ref.notes }}  </li>
                 <li class="list-group-item"><b>Doctor:</b> {{ user.pat_ref.doctor_id }}</li>
             {% endif %}

@@ -16,6 +16,7 @@ import dateutil.parser
 from datetime import datetime
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
+from .forms import ScheduleForm
 
 
 # from django.forms.extras.widgets import SelectDateWidget
@@ -85,35 +86,6 @@ class MedicalTestsDetailView(generic.DetailView):
         return get_object_or_404(MedicalTests, id=m_id_, patient_id=p_id_)
 
 
-class UserFormView(View):
-    form_class = UserForm
-    template_name = 'doctor/registration_form.html'
-
-    def get(self, request):
-        form = self.form_class(None)
-        return render(request, self.template_name, {'form': form})
-
-    # process form data
-    def post(self, request):
-        form = self.form_class(request.POST)
-
-        if form.is_valid():
-            user = form.save(commit=True)
-            # username = form.cleaned_data['username']
-            # password = form.cleaned_data['password']
-            #
-            # user.set_password(password)
-            # user.save()
-            #
-            # user = authenticate(username=username, password=password)
-            #
-            # if user is not None:
-            #     if user.is_active:
-            #         login(request, user)
-
-        return render(request, 'doctor/index.html')
-
-
 class ApplyForVisitView(CreateView):
     model = Schedule
     fields = ['day', 'time', 'note', 'doctor_id', 'patient_id']
@@ -147,13 +119,16 @@ class WeekView(generic.ListView):
 
         objects = Schedule.objects.filter(doctor_id=d_id, day__range=[start_week, end_week])
         context = '<ul class="list-group">'
+        context += '<li class="list-group-item"><b>Doctor: </b>' + str(self.request.user.doc_ref)
         context += '<li class="list-group-item"><b>'
         context += str(start_week.date()) + ' (' + str(days[start_week.weekday()]) + ') - '
         context += str(end_week.date()) + ' (' + str(days[end_week.weekday()]) + ')</b>'
         context += '<i> Current date: ' + str(curr_date.date()) + ' (' + str(days[curr_date.weekday()]) + ')</i></li>'
 
         for i in range(days.__len__() - 2):
-            context += '<li class="list-group-item" style="font-size: 150%"><b>' + days[i] + '</b>'
+            curr_day_month = start_week + timedelta(i)
+            context += '<li class="list-group-item" style="font-size: 150%"><b>' + days[i] + '</b> ' + str(
+                curr_day_month.day)
             if i == curr_date.weekday():
                 context += ' <i>(Today)</i>'
             context += '</li>'
@@ -174,3 +149,44 @@ class WeekView(generic.ListView):
         context += '</ul>'
         fin['week'] = mark_safe(context)
         return fin
+
+
+class UserFormView(View):
+    form_class = UserForm
+    template_name = 'doctor/registration_form.html'
+
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=True)
+            # username = form.cleaned_data['username']
+            # password = form.cleaned_data['password']
+            #
+            # user.set_password(password)
+            # user.save()
+            #
+            # user = authenticate(username=username, password=password)
+            #
+            # if user is not None:
+            #     if user.is_active:
+            #         login(request, user)
+
+        return render(request, 'doctor/index.html')
+
+
+def schedule_view(request):
+    form = ScheduleForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'doctor/forms/patient_schedule_form.html', context)
