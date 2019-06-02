@@ -9,7 +9,24 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['username', 'email', 'password', 'acc_type', 'pat_ref', 'doc_ref']
+        fields = ['username',
+                  'email',
+                  'password',
+                  'acc_type',
+                  'pat_ref',
+                  'doc_ref']
+
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username',
+                                               'type': 'text'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email',
+                                             'type': 'text'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control',
+                                                   'type': 'password'}),
+            'acc_type': widgets.Select(attrs={'class': 'select, form-control'}),
+            'pat_ref': widgets.Select(attrs={'class': 'select, form-control'}),
+            'doc_ref': widgets.Select(attrs={'class': 'select, form-control'}),
+        }
 
     def get_initial(self):
         initial_data = super(UserForm, self).get_initial()
@@ -99,8 +116,8 @@ class MedicalTestsForm(forms.ModelForm):
             'date_registration': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'date_taking_material': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'target_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'material': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Material','type': 'text'}),
-            'diagnosis': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Result','type': 'text'}),
+            'material': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Material', 'type': 'text'}),
+            'diagnosis': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Result', 'type': 'text'}),
             'delivering_method': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Delivering Method',
                                                         'type': 'text'}),
             'readiness': widgets.Select(attrs={'class': 'select, form-control'}),
