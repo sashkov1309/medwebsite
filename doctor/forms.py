@@ -20,7 +20,7 @@ class UserForm(forms.ModelForm):
 class ScheduleForm(forms.ModelForm):
     class Meta:
         model = Schedule
-        fields = ['day', 'time', 'note', 'doctor_id']
+        fields = ['day', 'time', 'note', 'doctor_id', 'patient_id']
         widgets = {
             'day': forms.DateInput(format='%d/%m/%Y',
                                    attrs={'class': 'form-control', 'placeholder': 'Select a date',
@@ -30,16 +30,103 @@ class ScheduleForm(forms.ModelForm):
                                            'type': 'text'}),
 
             'time': widgets.Select(attrs={'class': 'select, form-control'}),
-            'doctor_id': widgets.Select(attrs={'class': 'select, form-control'})
+            'doctor_id': widgets.Select(attrs={'class': 'select, form-control'}),
+            'patient_id': widgets.HiddenInput(),
         }
 
     def get_initial(self):
         initial_data = super(ScheduleForm, self).get_initial()
         initial_data['doctor_id'] = self.request.user.doc_ref
-        initial_data['patient_id'] = self.request.user.pat_ref
         return initial_data
 
-# apply for visit form
-# login
-# add patient
-# create user account
+
+class PatientAddForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = ['first_name',
+                  'middle_name',
+                  'last_name',
+                  'passport_id',
+                  'gender',
+                  'birth_date',
+                  'address',
+                  'phone_number',
+                  'email',
+                  'blood_type',
+                  'notes',
+                  'doctor_id']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name',
+                                                 'type': 'text'}),
+
+            'middle_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle name',
+                                                  'type': 'text'}),
+
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name',
+                                                'type': 'text'}),
+            'passport_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Passport ID',
+                                                  'type': 'text'}),
+            'gender': widgets.Select(attrs={'class': 'select, form-control'}),
+            'birth_date': forms.DateInput(format='%d/%m/%Y',
+                                          attrs={'class': 'form-control', 'placeholder': 'Birth date',
+                                                 'type': 'date'}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address',
+                                              'type': 'text'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone number',
+                                                   'type': 'text'}),
+            'email': forms.widgets.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email',
+                                                     'type': 'text'}),
+            'blood_type': widgets.Select(attrs={'class': 'select, form-control'}),
+            'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Notes',
+                                            'type': 'text'}),
+            'doctor_id': widgets.HiddenInput(),
+        }
+
+
+class PatientUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = ['first_name',
+                  'middle_name',
+                  'last_name',
+                  'passport_id',
+                  'gender',
+                  'birth_date',
+                  'address',
+                  'phone_number',
+                  'email',
+                  'blood_type',
+                  'notes',
+                  'doctor_id']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First name',
+                                                 'type': 'text'}),
+
+            'middle_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle name',
+                                                  'type': 'text'}),
+
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last name',
+                                                'type': 'text'}),
+            'passport_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Passport ID',
+                                                  'type': 'text'}),
+            'gender': widgets.Select(attrs={'class': 'select, form-control'}),
+            'birth_date': forms.DateInput(format='%d/%m/%Y',
+                                          attrs={'class': 'form-control', 'placeholder': 'Birth date',
+                                                 'type': 'date'}),
+            'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address',
+                                              'type': 'text'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone number',
+                                                   'type': 'text'}),
+            'email': forms.widgets.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email',
+                                                     'type': 'text'}),
+            'blood_type': widgets.Select(attrs={'class': 'select, form-control'}),
+            'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Notes',
+                                            'type': 'text'}),
+            'doctor_id': widgets.HiddenInput(),
+        }
+
+    def get_object(self, queryset=None):
+        # get the existing object or created a new one
+        obj, created = Patient.objects.get_or_create(col_1=self.kwargs['value_1'], col_2=self.kwargs['value_2'])
+
+        return obj

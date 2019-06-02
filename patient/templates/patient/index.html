@@ -8,8 +8,7 @@
 
     <ul class="list-group">
         <li class="list-group-item"><a href="{% url 'doctor:schedule' user.doc_ref.pk %}">Schedule</a></li>
-        <li class="list-group-item"><a href="{% url 'doctor:apply_for_visit' user.doc_ref.pk %}">Apply for Visit</a></li>
-        <li class="list-group-item"><a href="{% url 'doctor:schedule_view' %}">schedule_view</a></li>
+        <li class="list-group-item"><a href="{% url 'doctor:apply_for_visit' %}">schedule_view</a></li>
     </ul>
 
 {% endblock %}

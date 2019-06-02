@@ -23,6 +23,7 @@
         <li class="list-group-item"><b>Blood_type":</b> {{ object.blood_type }}</li>
         <li class="list-group-item"><b>Notes:</b> {{ object.notes }}  </li>
         <li class="list-group-item"><b>Doctor_id:</b> {{ object.doctor_id }}</li>
+        <li class="list-group-item"><b>Patient ID:</b> {{ object.pk }}</li>
     </ul>
     <br>
     <form action="{% url 'doctor:delete_patient' object.id %}" method="post">

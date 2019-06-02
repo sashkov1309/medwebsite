@@ -8,7 +8,6 @@ from .forms import UserForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from datetime import datetime, date, time, timedelta
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from .models import *
@@ -16,7 +15,8 @@ import dateutil.parser
 from datetime import datetime
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
-from .forms import ScheduleForm
+from .forms import *
+from django.http import HttpResponseRedirect
 
 
 # from django.forms.extras.widgets import SelectDateWidget
@@ -43,12 +43,6 @@ class PatientDetailView(generic.DetailView):
     def get_object(self, queryset=None):
         id_ = self.kwargs.get("pk")
         return get_object_or_404(Patient, id=id_)
-
-
-class PatientCreate(CreateView):
-    model = Patient
-    fields = ['first_name', 'first_name', 'last_name', 'gender', 'birth_date', 'address', 'phone_number', 'email',
-              'blood_type', 'notes', 'doctor_id']
 
 
 class MedicalTestCreate(CreateView):
@@ -180,13 +174,42 @@ class UserFormView(View):
         return render(request, 'doctor/index.html')
 
 
-def schedule_view(request):
-    form = ScheduleForm(request.POST or None)
-    if form.is_valid():
-        form.save()
+def schedule_form_view(request):
+    form = ScheduleForm(request.POST or None, initial={"patient_id": request.user.pat_ref})
 
     context = {
         'form': form
     }
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('doctor:schedule',
+                                            kwargs={'pk': form.cleaned_data['doctor_id'].pk}))
 
-    return render(request, 'doctor/forms/patient_schedule_form.html', context)
+    return render(request, 'doctor/forms/schedule_form.html', context)
+
+
+def patient_create_form_view(request):
+    form = PatientAddForm(request.POST or None, initial={"doctor_id": request.user.doc_ref})
+
+    context = {
+        'form': form
+    }
+    if form.is_valid():
+        data = form.save()
+        return HttpResponseRedirect(reverse('doctor:patient_details',
+                                            kwargs={'pk': data.pk}))
+
+    return render(request, 'doctor/forms/patient_create_form.html', context)
+
+def patient_update_form_view(request):
+    form = PatientAddForm(request.POST or None, initial={"doctor_id": request.user.doc_ref})
+
+    context = {
+        'form': form
+    }
+    if form.is_valid():
+        data = form.save()
+        return HttpResponseRedirect(reverse('doctor:patient_details',
+                                            kwargs={'pk': data.pk}))
+
+    return render(request, 'doctor/forms/patient_create_form.html', context)
